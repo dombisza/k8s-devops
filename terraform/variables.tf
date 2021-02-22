@@ -12,7 +12,7 @@ variable "tenant" {
 variable "ecs" {
   type = map
   default = {
-    name = "sdombi-k8s"
+    #name = "${var.tenant.user_name}-k8s"
     image_id = "dcc3d489-c7ff-4f26-8ab0-745b74a690e0"
     flavor = "s3.xlarge.2"
     key_pair = "terraform"
@@ -36,7 +36,7 @@ variable "worker_disk_size" {
 variable "vpc" {
   type = map
   default = {
-    name = "sdombi-kubernetes"
+    #name = "${var.tenant.user_name}-kubernetes"
     cidr = "192.168.0.0/16"
 
     subnet_name = "control"
@@ -54,7 +54,7 @@ variable "vpc" {
 variable "nat" {
   type = map
   default = {
-    name = "sdombi-k8s-nat"
+    #name = "${var.tenant.user_name}-k8s-nat"
     description = "natgw for k8s cluster"
     size = "1"
   }
@@ -63,7 +63,7 @@ variable "nat" {
 variable "eip" {
   type = map
   default = {
-    name = "sdombi-gw-bw"
+    #name = "${var.tenant.user_name}-gw-bw"
     bw_size = "5"
   }
 }

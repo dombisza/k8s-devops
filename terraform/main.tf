@@ -1,5 +1,3 @@
-# Configure the OpenTelekomCloud Provider
-
 terraform {
   required_providers {
     opentelekomcloud = {
@@ -17,11 +15,8 @@ provider "opentelekomcloud" {
   auth_url    = "https://iam.eu-de.otc.t-systems.com/v3"
 }
 
-# Create a web server
-#
-
 resource "opentelekomcloud_vpc_v1" "vpc" {
-  name = var.vpc.name
+  name = "${var.tenant.user_name}-k8s-vpc"
   cidr = var.vpc.cidr
 }
 
@@ -40,14 +35,14 @@ resource "opentelekomcloud_vpc_eip_v1" "eip" {
     type = "5_bgp"
   }
   bandwidth {
-    name       = var.eip.name
+    name       = "${var.tenant.user_name}-k8s-bw"
     size       = var.eip.bw_size
     share_type = "PER"
   }
 }
 
 resource "opentelekomcloud_nat_gateway_v2" "nat_gw" {
-  name                = var.nat.name
+  name                = "${var.tenant.user_name}-k8s-natgw"
   description         = var.nat.description
   spec                = var.nat.size
   router_id           = opentelekomcloud_vpc_v1.vpc.id 
@@ -71,7 +66,7 @@ resource "opentelekomcloud_nat_dnat_rule_v2" "dnat_1" {
 }
 
 resource "opentelekomcloud_networking_secgroup_v2" "backend" {
-  name        = "backend"
+  name        = "${var.tenant.user_name}-backend" 
   description = "Created By Terraform."
 }
 
@@ -85,11 +80,6 @@ resource "opentelekomcloud_networking_secgroup_rule_v2" "secgroup_rule_1" {
   security_group_id = opentelekomcloud_networking_secgroup_v2.backend.id
 }
 
-#resource "opentelekomcloud_networking_network_v2" "network_1" {
-#  name           = "network_1"
-#  admin_state_up = "true"
-#}
-
 resource "opentelekomcloud_networking_port_v2" "port_1" {
   name           = "port_1"
   network_id     = opentelekomcloud_vpc_subnet_v1.subnet.id 
@@ -97,13 +87,13 @@ resource "opentelekomcloud_networking_port_v2" "port_1" {
 }
 
 resource "opentelekomcloud_compute_instance_v2" "bastion" {
-  name            = "${var.ecs.name}-bastion"
+  name            = "${var.tenant.user_name}-bastion"
   image_id        = var.ecs.image_id
   flavor_name     = "s3.medium.2"
   key_pair        = var.ecs.key_pair
   security_groups = [opentelekomcloud_networking_secgroup_v2.backend.name] 
   availability_zone = var.ecs.az
-  user_data = file("init_salt.sh") 
+  #  user_data = file("init_salt.sh") 
   tags = {
     owner = var.ecs.owner 
     role = "bastion"
@@ -111,16 +101,13 @@ resource "opentelekomcloud_compute_instance_v2" "bastion" {
 
   network {
     port = opentelekomcloud_networking_port_v2.port_1.id
-    #uuid = opentelekomcloud_vpc_subnet_v1.subnet.id
-    #fixed_ip_v4 = var.vpc.bastion_ip
   }
 
 }
 
 
 resource "opentelekomcloud_compute_instance_v2" "controller" {
-  name            = "${var.ecs.name}-controller"
-  #  image_id        = var.ecs.image_id
+  name            = "${var.tenant.user_name}-k8s-controller"
   flavor_name     = var.ecs.flavor
   key_pair        = var.ecs.key_pair
   security_groups = [opentelekomcloud_networking_secgroup_v2.backend.name]
@@ -150,7 +137,7 @@ resource "opentelekomcloud_compute_instance_v2" "controller" {
 }
 
 resource "opentelekomcloud_compute_instance_v2" "worker" {
-   name            = "${var.ecs.name}-worker"
+   name            = "${var.tenant.user_name}-k8s-worker"
    image_id        = var.ecs.image_id
    flavor_name     = var.ecs.flavor
    key_pair        = var.ecs.key_pair
