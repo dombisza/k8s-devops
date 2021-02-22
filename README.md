@@ -3,10 +3,10 @@ Terraform + salt scripts to bootstrap a k8s cluster with kubeadm on OTC.
 
 Usage:  
 add credentials to variables.tf, modify: key_pair, owner and resource names to your liking.  
-terraform plan  
-terraform apply  
+`terraform plan`  
+`terraform apply`  
 log in to bastion EIP -> log in to controller (you need to use ssh-agent forwarding)  
-check /tmp/kubeadm.log for kubeadm join command. run that on the worker node(s).  
+check /tmp/kubeadm.log for `kubeadm join` command. run that on the worker node(s).  
 if you want to set up kubectl for the cluster the setup command is in the /tmp/kubeadm.log file as well.  
 have fun :)  
 if you had enough fun just run terraform destroy  
