@@ -20,6 +20,15 @@ variable "ecs" {
     owner = "sdombi"
   }
 }
+
+variable "worker_count" {
+  default = 2
+}
+
+variable "bastion_flavor" {
+  default = "s3.medium.2"
+}
+
 variable "controller_disk_size" {
   default = 20
 }

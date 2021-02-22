@@ -89,11 +89,11 @@ resource "opentelekomcloud_networking_port_v2" "port_1" {
 resource "opentelekomcloud_compute_instance_v2" "bastion" {
   name            = "${var.tenant.user_name}-bastion"
   image_id        = var.ecs.image_id
-  flavor_name     = "s3.medium.2"
+  flavor_name     = var.bastion_flavor
   key_pair        = var.ecs.key_pair
   security_groups = [opentelekomcloud_networking_secgroup_v2.backend.name] 
   availability_zone = var.ecs.az
-  #  user_data = file("init_salt.sh") 
+  #  user_data = file("init_salt.sh")
   tags = {
     owner = var.ecs.owner 
     role = "bastion"
@@ -137,7 +137,8 @@ resource "opentelekomcloud_compute_instance_v2" "controller" {
 }
 
 resource "opentelekomcloud_compute_instance_v2" "worker" {
-   name            = "${var.tenant.user_name}-k8s-worker"
+   count           = var.worker_count 
+   name            = format("${var.tenant.user_name}-k8s-worker-%s", count.index + 1)
    image_id        = var.ecs.image_id
    flavor_name     = var.ecs.flavor
    key_pair        = var.ecs.key_pair
