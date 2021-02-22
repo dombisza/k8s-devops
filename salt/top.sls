@@ -3,6 +3,6 @@ base:
     - docker
     - k8s
     - master_init
-  '*worker':
+  '*worker*':
     - docker
     - k8s
