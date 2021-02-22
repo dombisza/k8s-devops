@@ -105,7 +105,7 @@ resource "opentelekomcloud_compute_instance_v2" "bastion" {
   availability_zone = var.ecs.az
   user_data = file("init_salt.sh") 
   tags = {
-    owner = "sdombi"
+    owner = var.ecs.owner 
     role = "bastion"
   }
 
@@ -138,7 +138,7 @@ resource "opentelekomcloud_compute_instance_v2" "controller" {
   }
 
   tags = {
-    owner = "sdombi"
+    owner = var.ecs.owner
     role = "master"
   }
 
@@ -170,7 +170,7 @@ resource "opentelekomcloud_compute_instance_v2" "worker" {
 
 
    tags = {
-     owner = "sdombi"
+     owner = var.ecs.owner
      role = "worker"
    }
 

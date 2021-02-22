@@ -17,6 +17,7 @@ variable "ecs" {
     flavor = "s3.xlarge.2"
     key_pair = "terraform"
     az = "eu-de-01"
+    owner = "sdombi"
   }
 }
 variable "controller_disk_size" {
