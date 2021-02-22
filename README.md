@@ -16,7 +16,7 @@ opentelekomcloud_vpc_v1.vpc - VPC for all nodes
 opentelekomcloud_vpc_subnet_v1.subnet - subnet for all nodes  
 opentelekomcloud_networking_secgroup_v2.backend - Security group (allows all comms, but you can modify it to your taste)  
 opentelekomcloud_vpc_eip_v1.eip - eip for natgw  
-opentelekomcloud_vpc_subnet_v1.subnet - natgw   
+opentelekomcloud_nat_gateway_v2.natgw - natgw   
 opentelekomcloud_nat_snat_rule_v2.snat_1 - snat rule to allow traffic from subnet to public internet  
 opentelekomcloud_nat_dnat_rule_v2.dnat_1 - dnat for natgw -> bastion ssh port forward. only port 22 is forwarded.  
 opentelekomcloud_networking_port_v2.port_1 - neutron port for bastion. it is connected to the natgw via dnat rule  
